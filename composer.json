@@ -1,0 +1,31 @@
+{
+    "name": "jackdou/management",
+    "description": "laravel package admin manage web site",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "jackdou",
+            "email": "jackdoujiang@qq.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.1",
+        "laravelcollective/html": "^5.8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "JackDou\\Management\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "JackDou\\Management\\ManagementServiceProvider"
+            ]
+        }
+    },
+    "require-dev": {
+    }
+}

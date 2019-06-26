@@ -1,0 +1,1 @@
+@extends("management::layouts.management")
