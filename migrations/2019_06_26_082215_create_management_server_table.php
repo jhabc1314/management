@@ -19,7 +19,6 @@ class CreateManagementServerTable extends Migration
             $table->json("server_node")->comment("服务节点列表");
             $table->tinyInteger("server_status")->default(1)->comment("服务状态1开启0关闭");
             $table->unique("server_name", "idx_server_name");
-            $table->primary("id", "pidx_id");
             $table->timestamps();
         });
         \Illuminate\Support\Facades\DB::statement("ALTER TABLE `management_server` comment '服务信息表'");

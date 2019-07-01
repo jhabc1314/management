@@ -11,8 +11,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": ">=7.1",
-        "laravelcollective/html": "^5.8.0"
+        "php": ">=7.1"
     },
     "autoload": {
         "psr-4": {
