@@ -1,2 +1,2 @@
-@extends("layouts/management")
+@extends("management::layouts/management")
 

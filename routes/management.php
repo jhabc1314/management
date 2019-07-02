@@ -5,8 +5,14 @@
  * Date: 19-6-26
  * Time: 下午2:15
  */
-
-Route::group(['prefix' => 'management', 'middleware' => 'web'], function() {
+$guard = config('management.guard') ?: 'web';
+Route::group(['prefix' => 'management', 'middleware' => 'web', 'auth' => 'auth:' . $guard], function() {
     $namespacePrefix = "\\JackDou\\Management\\Http\\Controllers\\";
-    Route::get('/{timezone?}', $namespacePrefix . "ManagementController@home");
+    Route::get('/', $namespacePrefix . "ManagementController@home")->name('management.home');
+
+    //CRUD Server
+    Route::resource('servers', $namespacePrefix . 'ServersController');
+
+    Route::get('/servers/{id}/clients', $namespacePrefix . 'ServerController@clients')->name('clients.index');
+    Route::post('/servers/{id}/clients', $namespacePrefix . 'ServerController@clientsStore')->name('clients.store');
 });

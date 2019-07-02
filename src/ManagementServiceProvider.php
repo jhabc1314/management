@@ -2,6 +2,7 @@
 
 namespace JackDou\Management;
 
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class ManagementServiceProvider extends ServiceProvider
@@ -33,6 +34,15 @@ class ManagementServiceProvider extends ServiceProvider
 
         //加载views
         $this->loadViewsFrom(__DIR__ . "/../resources/views", "management");
+
+        //注册视图合成器
+        View::composer('management::home', 'JackDou\Management\Http\ViewComposers\HomeComposer');
+        View::composer([
+            'management::servers.index',
+            'management::servers.create',
+            'management::servers.edit'
+            //'management::servers.push'
+        ], 'JackDou\Management\Http\ViewComposers\ServerComposer');
 
         //发布配置，公共asset
         $this->publishes([
