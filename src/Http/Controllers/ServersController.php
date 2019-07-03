@@ -20,7 +20,7 @@ class ServersController extends Controller
     public function __construct()
     {
         $this->guard = config('management.guard') ?: null;
-        $this->middleware('auth:' . $guard);
+        $this->middleware('auth:' . $this->guard);
     }
 
     /**
