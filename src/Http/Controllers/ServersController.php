@@ -4,6 +4,7 @@ namespace JackDou\Management\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use JackDou\Management\Models\Client;
 use JackDou\Management\Models\Server;
@@ -14,13 +15,12 @@ use JackDou\Swoole\Services\SwooleService;
 class ServersController extends Controller
 {
 
-    public $user;
+    public $guard;
 
     public function __construct()
     {
-        $guard = config('management.guard') ?: 'web';
+        $this->guard = config('management.guard') ?: null;
         $this->middleware('auth:' . $guard);
-        $this->user = \Auth::guard($guard)->user();
     }
 
     /**
@@ -61,7 +61,7 @@ class ServersController extends Controller
         $server->server_name = $request->post('server_name');
         $server->server_desc = $request->post('server_desc');
         $server->server_node = $request->post('server_node');
-        $server->creator = $this->user->name;
+        $server->creator = Auth::guard($this->guard)->user()->name;
         $server->save();
         return redirect(route('servers.index'));
     }
@@ -95,7 +95,7 @@ class ServersController extends Controller
         $server->server_name = $put['server_name'];
         $server->server_desc = $put['server_desc'];
         $server->server_node = $put['server_node'];
-        $server->modifier = $this->user->name;
+        $server->modifier = Auth::guard($this->guard)->user()->name;
         $server->save();
         return redirect(route('servers.index'));
     }
@@ -141,7 +141,7 @@ class ServersController extends Controller
         $client = new Client();
         $client->server_id = $server->id;
         $client->client_ip = $request->post('ip');
-        $client->creator = $this->user->name;
+        $client->creator = Auth::guard($this->guard)->user()->name;
         $client->save();
         return Response::redirectTo(route('clients.index', $id));
     }
