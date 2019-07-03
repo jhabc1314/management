@@ -14,6 +14,15 @@ use JackDou\Swoole\Services\SwooleService;
 class ServersController extends Controller
 {
 
+    public $user;
+
+    public function __construct()
+    {
+        $guard = config('management.guard') ?: 'web';
+        $this->middleware('auth:' . $guard);
+        $this->user = \Auth::guard($guard)->user();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -52,7 +61,7 @@ class ServersController extends Controller
         $server->server_name = $request->post('server_name');
         $server->server_desc = $request->post('server_desc');
         $server->server_node = $request->post('server_node');
-        $server->creator = $request->user()->name;
+        $server->creator = $this->user->name;
         $server->save();
         return redirect(route('servers.index'));
     }
@@ -86,7 +95,7 @@ class ServersController extends Controller
         $server->server_name = $put['server_name'];
         $server->server_desc = $put['server_desc'];
         $server->server_node = $put['server_node'];
-        $server->modifier = $request->user()->name;
+        $server->modifier = $this->user->name;
         $server->save();
         return redirect(route('servers.index'));
     }
@@ -132,7 +141,7 @@ class ServersController extends Controller
         $client = new Client();
         $client->server_id = $server->id;
         $client->client_ip = $request->post('ip');
-        $client->creator = $request->user()->name;
+        $client->creator = $this->user->name;
         $client->save();
         return Response::redirectTo(route('clients.index', $id));
     }

@@ -17,6 +17,11 @@ class ManagementServiceProvider extends ServiceProvider
         //加载帮助函数
         require __DIR__ . "/Helpers/HelperFunction.php";
 
+        //合并用户自定义配置和默认配置
+        $this->mergeConfigFrom(
+            __DIR__ . '/../configs/management.php',
+            'management'
+        );
     }
 
     /**
@@ -34,6 +39,12 @@ class ManagementServiceProvider extends ServiceProvider
 
         //加载views
         $this->loadViewsFrom(__DIR__ . "/../resources/views", "management");
+
+        //Publish config files
+        $this->publishes([
+            __DIR__ . '/../configs/management.php' => config_path('management.php'),
+        ]);
+
 
         //注册视图合成器
         View::composer('management::home', 'JackDou\Management\Http\ViewComposers\HomeComposer');

@@ -5,8 +5,7 @@
  * Date: 19-6-26
  * Time: 下午2:15
  */
-$guard = config('management.guard') ?: 'web';
-Route::group(['prefix' => 'management', 'middleware' => 'web', 'auth' => 'auth:' . $guard], function() {
+Route::group(['prefix' => 'management', 'middleware' => 'web'], function() {
     $namePrefix = "\\JackDou\\Management\\Http\\Controllers\\";
     Route::get('/', $namePrefix . "ManagementController@home")->name('management.home');
 
