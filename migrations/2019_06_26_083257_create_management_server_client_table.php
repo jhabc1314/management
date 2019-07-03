@@ -19,7 +19,7 @@ class CreateManagementServerClientTable extends Migration
             $table->string("client_ip", 32)->default("")->comment("客户机ip");
             $table->tinyInteger("client_status")->default(1)->comment("状态1正常0删除");
             $table->string("creator", 32)->default('')->comment('添加人');
-            $table->dateTime("push_date")->comment("下发时间");
+            $table->dateTime("push_date")->nullable()->comment("下发时间");
             $table->timestamps();
         });
         \Illuminate\Support\Facades\DB::statement("ALTER TABLE `management_server` comment '服务客户端信息表'");
