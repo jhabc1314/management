@@ -56,7 +56,7 @@
                                     <a href="{{route('servers.edit', [$server->id])}}">
                                         <button type="button" class="btn btn-outline-primary">编辑服务</button>
                                     </a>
-                                    <a href="#">
+                                    <a href="{{route('clients.index', [$server->id])}}">
                                         <button type="button" class="btn btn-outline-info">客户端管理</button>
                                     </a>
                                     <a href="#">

@@ -11,7 +11,8 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": ">=7.1"
+        "php": ">=7.1",
+        "jackdou/laravel-swoole": ">=1.2"
     },
     "autoload": {
         "psr-4": {

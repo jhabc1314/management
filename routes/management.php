@@ -7,12 +7,15 @@
  */
 $guard = config('management.guard') ?: 'web';
 Route::group(['prefix' => 'management', 'middleware' => 'web', 'auth' => 'auth:' . $guard], function() {
-    $namespacePrefix = "\\JackDou\\Management\\Http\\Controllers\\";
-    Route::get('/', $namespacePrefix . "ManagementController@home")->name('management.home');
+    $namePrefix = "\\JackDou\\Management\\Http\\Controllers\\";
+    Route::get('/', $namePrefix . "ManagementController@home")->name('management.home');
 
     //CRUD Server
-    Route::resource('servers', $namespacePrefix . 'ServersController');
+    Route::resource('servers', $namePrefix . 'ServersController');
 
-    Route::get('/servers/{id}/clients', $namespacePrefix . 'ServerController@clients')->name('clients.index');
-    Route::post('/servers/{id}/clients', $namespacePrefix . 'ServerController@clientsStore')->name('clients.store');
+    Route::get('/servers/{id}/clients', $namePrefix . 'ServersController@clients')->name('clients.index');
+    Route::post('/servers/{id}/clients', $namePrefix . 'ServersController@clientsStore')->name('clients.store');
+    Route::get('/servers/{id}/clients/{cid}/push', $namePrefix . 'ServersController@clientsPush')->name('clients.push');
+    Route::get('/servers/{id}/clients/{cid}/destroy', $namePrefix . 'ServersController@clientsDestroy')->name('clients.destroy');
+    Route::get('/servers/{id}/clients/push_all', $namePrefix . 'ServersController@clientsPushAll')->name('clients.pushAll');
 });

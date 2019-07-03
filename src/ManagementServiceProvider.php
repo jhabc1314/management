@@ -40,8 +40,8 @@ class ManagementServiceProvider extends ServiceProvider
         View::composer([
             'management::servers.index',
             'management::servers.create',
-            'management::servers.edit'
-            //'management::servers.push'
+            'management::servers.edit',
+            'management::servers.client',
         ], 'JackDou\Management\Http\ViewComposers\ServerComposer');
 
         //发布配置，公共asset
