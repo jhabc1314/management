@@ -13,7 +13,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('servers.index') }}">服务管理</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('servers.index') }}/">服务管理</a></li>
                         <li class="breadcrumb-item active">客户端管理</li>
                     </ol>
                 </div>

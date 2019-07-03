@@ -106,7 +106,7 @@ to get the desired effect
                         </a>
                     </li>
                     <li class="nav-item has-treeview">
-                        <a href="{{route('servers.index')}}" class="nav-link {{ $active['server_active'] }}">
+                        <a href="{{route('servers.index')}}/" class="nav-link {{ $active['server_active'] }}">
                             <i class="nav-icon fas fa-th"></i>
                             <p>
                                 微服务管理

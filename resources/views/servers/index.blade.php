@@ -56,13 +56,9 @@
                                     <a href="{{route('servers.edit', [$server->id])}}">
                                         <button type="button" class="btn btn-outline-primary">编辑服务</button>
                                     </a>
-                                    <a href="{{route('clients.index', [$server->id])}}">
+                                    <a href="{{route('clients.index', [$server->id])}}/">
                                         <button type="button" class="btn btn-outline-info">客户端管理</button>
                                     </a>
-                                    <a href="#">
-                                        <button type="button" class="btn btn-outline-success">下发配置</button>
-                                    </a>
-
                                     {{--<button type="button" class="btn btn-outline-danger disabled">删 除</button>--}}
                                 </td>
                             </tr>
