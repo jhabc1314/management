@@ -12,6 +12,7 @@ management 是基于 ` jackdou/laravel-swoole`  和 `adminLTE3` 的 `laravel` �
 ## 使用
 - 默认的权限系统使用的是项目里的 `auth:web`， 可以在 `config/management.php` 内修改
 - 打开 youdomain.url/management 访问
-
+## 新特性
+- v0.2.0 新增supervisor进程管理，后台一键启动，重启，停止
 ## 使用教程
-- [传送门](http://www.jackdou.top)
+- [了解更多](http://www.jackdou.top)
