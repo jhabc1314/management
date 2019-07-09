@@ -53,6 +53,7 @@ class ManagementServiceProvider extends ServiceProvider
             'management::servers.create',
             'management::servers.edit',
             'management::servers.client',
+            'management::servers.supervisor',
         ], 'JackDou\Management\Http\ViewComposers\ServerComposer');
 
         //发布配置，公共asset

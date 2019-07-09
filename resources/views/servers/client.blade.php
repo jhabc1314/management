@@ -95,8 +95,43 @@
 
 
 @endsection
+<!-- SweetAlert2 -->
+<script src="{{m_asset('plugins/sweetalert2/sweetalert2.min.js')}}"></script>
 
+<script type="text/javascript">
+    $(function () {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
 
+        function succ(v) {
+            Toast.fire({
+                type: 'success',
+                title: v
+            });
+        }
+
+        let success = '{{session()->get('success', '')}}';
+        let fail = '{{session()->get('fail', '')}}';
+        if (success.length > 0) {
+            succ(success);
+        }
+        if (fail.length > 0) {
+            Toast.fire({
+                type: 'error',
+                title: 'Fail'
+            })
+        }
+    });
+</script>
 @section("script")
 
+@endsection
+
+@section("css")
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="{{m_asset('plugins/sweetalert2/sweetalert2.min.css')}}">
 @endsection

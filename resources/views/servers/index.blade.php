@@ -59,6 +59,9 @@
                                     <a href="{{route('clients.index', [$server->id])}}/">
                                         <button type="button" class="btn btn-outline-info">客户端管理</button>
                                     </a>
+                                    <a href="{{route('supervisor.index', [$server->id])}}">
+                                        <button type="button" class="btn btn-outline-success">Supervisor</button>
+                                    </a>
                                     {{--<button type="button" class="btn btn-outline-danger disabled">删 除</button>--}}
                                 </td>
                             </tr>
@@ -102,23 +105,46 @@
     <script src="{{m_asset('plugins/fastclick/fastclick.js')}}"></script>
     <!-- AdminLTE App -->
     <script src="{{ m_asset('dist/js/adminlte.min.js') }}"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="{{ m_asset('dist/js/demo.js') }}"></script>
-    <!-- page script -->
-    <script>
+    <!-- SweetAlert2 -->
+    <script src="{{m_asset('plugins/sweetalert2/sweetalert2.min.js')}}"></script>
+
+    <script type="text/javascript">
         $(function () {
             $("#servers-table").DataTable({
                 "paging": false,
                 "info": false
             });
-            /*$('#example2').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-            });*/
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+            function succ(v) {
+                Toast.fire({
+                    type: 'success',
+                    title: v
+                });
+            }
+
+            let success = '{{ session()->get('success', '') }}';
+            let fail = '{{session()->get('fail', '')}}';
+            if (success.length > 0) {
+                succ(success);
+            }
+            if (fail.length > 0) {
+                Toast.fire({
+                    type: 'error',
+                    title: 'Fail'
+                })
+            }
         });
     </script>
+@endsection
+
+@section("css")
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="{{m_asset('plugins/sweetalert2/sweetalert2.min.css')}}">
 @endsection

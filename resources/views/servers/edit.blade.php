@@ -62,6 +62,7 @@
                             <!-- /.card-body -->
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">Submit</button>
+                                <span class="text-danger">注意：修改成功需要重新下发才能生效</span>
                             </div>
                         </form>
                     </div>

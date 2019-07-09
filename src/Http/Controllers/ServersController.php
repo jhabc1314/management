@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use JackDou\Management\Models\Client;
 use JackDou\Management\Models\Server;
+use JackDou\Management\Models\Supervisor;
 use JackDou\Management\Services\ManagementService;
 use JackDou\Swoole\Facade\Service;
 use JackDou\Swoole\Services\SwooleService;
@@ -30,9 +31,17 @@ class ServersController extends Controller
      */
     public function index()
     {
-        //
-        $servers = Server::where('server_status', 1)
-            ->paginate(10);
+        //如果配置了超级用户，则非超级用户无法看到关键服务
+        $super_user = config('management.super_user');
+        $servers = Server::where('server_status', 1);
+        $login_user = Auth::guard($this->guard)->user()->name;
+        if (is_array($super_user) && !in_array($login_user, $super_user)) {
+            $servers->whereNotIn('server_name', config('management.kernel_servers'));
+        } elseif (!empty($super_user) && $super_user != $login_user) {
+            $servers->whereNotIn('server_name', config('management.kernel_servers'));
+        }
+        $servers = $servers->paginate(10);
+
         return view("management::servers.index", compact('servers'));
 
     }
@@ -63,6 +72,7 @@ class ServersController extends Controller
         $server->server_node = $request->post('server_node');
         $server->creator = Auth::guard($this->guard)->user()->name;
         $server->save();
+        $request->session()->flash('success', '添加成功');
         return redirect(route('servers.index'));
     }
 
@@ -92,11 +102,25 @@ class ServersController extends Controller
         //
         $server = Server::findOrFail($id);
         $put = $request->all();
+        //server_name 发生变化就触发supervisor名称变更
+        if ($server->server_name != $put['server_name']) {
+            $supervisor = Supervisor::where('server_id', $id)->first();
+            $nodes = json_decode($server->server_node);
+            if (!empty($nodes) && $supervisor) {
+                foreach ($nodes as $node) {
+                    //重新修改supervisor配置项目名
+                    Service::getInstance(SwooleService::NODE_MANAGER, $node->ip)
+                        ->call('ManagementService::pushSupervisorConf', $put['server_name'], $supervisor, $server->server_name)
+                        ->getResult();
+                }
+            }
+        }
         $server->server_name = $put['server_name'];
         $server->server_desc = $put['server_desc'];
         $server->server_node = $put['server_node'];
         $server->modifier = Auth::guard($this->guard)->user()->name;
         $server->save();
+        $request->session()->flash('success', '更新成功');
         return redirect(route('servers.index'));
     }
 
@@ -143,18 +167,20 @@ class ServersController extends Controller
         $client->client_ip = $request->post('ip');
         $client->creator = Auth::guard($this->guard)->user()->name;
         $client->save();
+        $request->session()->flash('success', '添加成功');
         return Response::redirectTo(route('clients.index', $id));
     }
 
     /**
      * 下发配置到客户端
      *
+     * @param $request Request
      * @param $id
      * @param $cid
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function clientsPush($id, $cid)
+    public function clientsPush(Request $request,$id, $cid)
     {
         $server = Server::findOrFail($id);
         $client = Client::where('id', $cid)
@@ -165,38 +191,44 @@ class ServersController extends Controller
             ManagementService::pushServerNode($server->server_name, $server->server_node);
         }
         //请求对应客户机器的node_manager 下发配置内容
-        Service::getInstance('node_manager', $client->client_ip)
+        Service::getInstance(SwooleService::NODE_MANAGER, $client->client_ip)
             ->call('ManagementService::pushServerNode', $server->server_name, $server->server_node)
             ->getResult();
+        $request->session()->flash('success', 'push success');
+
         return back();
     }
 
     /**
      * 删除客户端
      *
+     * @param $request Request
      * @param $id
      * @param $cid
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function clientsDestroy($id, $cid)
+    public function clientsDestroy(Request $request, $id, $cid)
     {
         $client = Client::where('id', $cid)
             ->where('server_id', $id)
             ->first();
         $client->client_status = 0;
         $client->save();
+        $request->session()->flash('success', 'delete success');
+
         return back();
     }
 
     /**
      * 下发配置到所有客户端
      *
+     * @param $request Request
      * @param $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function clientsPushAll($id)
+    public function clientsPushAll(Request $request, $id)
     {
         $server = Server::findOrFail($id);
         $clients = Client::where('server_id', $id)
@@ -208,10 +240,11 @@ class ServersController extends Controller
         }
         foreach ($clients as $client) {
             //请求对应客户机器的node_manager 下发配置内容
-            Service::getInstance('node_manager', $client->client_ip)
+            Service::getInstance(SwooleService::NODE_MANAGER, $client->client_ip)
                 ->call('ManagementService::pushServerNode', $server->server_name, $server->server_node)
                 ->getResult();
         }
+        $request->session()->flash('success', 'push all success');
         return back();
     }
 }
