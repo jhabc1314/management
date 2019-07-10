@@ -46,7 +46,9 @@
             <!-- /.card-body -->
             <div class="card-footer">
                 <a href="https://github.com/jhabc1314/management">
-                    <button type="button" class="btn btn-outline-secondary">支持一下</button>
+                    <button type="button" class="btn btn-outline-secondary">
+                        <img width="23" height="23" src="{{m_asset('github.svg')}}" alt=""> 支持一下
+                    </button>
                 </a>
             </div>
             <!-- /.card-footer-->
