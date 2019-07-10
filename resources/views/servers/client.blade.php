@@ -95,6 +95,8 @@
 
 
 @endsection
+<!-- jQuery -->
+<script src="{{ m_asset('plugins/jquery/jquery.min.js') }}"></script>
 <!-- SweetAlert2 -->
 <script src="{{m_asset('plugins/sweetalert2/sweetalert2.min.js')}}"></script>
 
