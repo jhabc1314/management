@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\View;
 use JackDou\Management\Models\Client;
 use JackDou\Management\Models\Server;
 use JackDou\Management\Models\Supervisor;
-use JackDou\Management\Services\ManagementService;
+use JackDou\Swoole\Management\ManagementService;
 use JackDou\Swoole\Facade\Service;
 use JackDou\Swoole\Services\SwooleService;
 
@@ -180,7 +180,11 @@ class SupervisorController extends Controller
         $res = Service::getInstance(SwooleService::NODE_MANAGER, $ip)
             ->call('ManagementService::restart', $server->server_name)
             ->getResult(20);//重启比较耗时
-        $request->session()->flash('success', !empty($res['data']) ? $res['data'] : 'restart success');
+        $msg = '';
+        if ($server->server_name == SwooleService::CRON_MANAGER) {
+            $msg = " don't forget to restart crontab";
+        }
+        $request->session()->flash('success', !empty($res['data']) ? $res['data'] . $msg  : 'restart success' . $msg);
         return redirect(route('supervisor.index', $id));
     }
 
@@ -218,7 +222,11 @@ class SupervisorController extends Controller
         $res = Service::getInstance(SwooleService::NODE_MANAGER, $ip)
             ->call('ManagementService::stop', $server->server_name)
             ->getResult(10);
-        $request->session()->flash('success', !empty($res['data']) ? $res['data'] : '服务状态未知');
+        $msg = '';
+        if ($server->server_name == SwooleService::CRON_MANAGER) {
+            $msg = " please notice crontab";
+        }
+        $request->session()->flash('success', !empty($res['data']) ? $res['data'] . $msg : '状态未知' . $msg);
         return redirect(route('supervisor.index', $id));
     }
 

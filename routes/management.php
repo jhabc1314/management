@@ -30,4 +30,10 @@ Route::group(['prefix' => 'management', 'middleware' => 'web'], function() {
     Route::get('/servers/{id}/supervisor/{ip}/stop', $namePrefix . 'SupervisorController@stop')->name('supervisor.stop');
     Route::get('/servers/{id}/supervisor/{ip}/online', $namePrefix . 'SupervisorController@online')->name('supervisor.online');
 
+    //CRUD Crontab
+    Route::resource('crontab', $namePrefix . 'CrontabController');
+
+    Route::get('/crontab/{id}/start', $namePrefix . 'CrontabController@start')->name('crontab.start');
+    Route::get('/crontab/{id}/stop', $namePrefix . 'CrontabController@stop')->name('crontab.stop');
+
 });

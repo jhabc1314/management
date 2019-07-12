@@ -22,8 +22,8 @@ class Server extends Model
         foreach ($nodes as &$node) {
             $run_status = Service::getInstance(SwooleService::NODE_MANAGER, $node->ip)
                 ->call('ManagementService::nodeStatus', $this->server_name)
-                ->getResult();
-            $node->run_status = !empty($run_status['data']) ? $run_status['data'] : 'query fail';
+                ->getResult(2);
+            $node->run_status = !empty($run_status['data']) ? $run_status['data'] : 'query fail, please try to refresh';
         }
     }
 }

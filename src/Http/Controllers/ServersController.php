@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Response;
 use JackDou\Management\Models\Client;
 use JackDou\Management\Models\Server;
 use JackDou\Management\Models\Supervisor;
-use JackDou\Management\Services\ManagementService;
 use JackDou\Swoole\Facade\Service;
+use JackDou\Swoole\Management\ManagementService;
 use JackDou\Swoole\Services\SwooleService;
 
 class ServersController extends Controller

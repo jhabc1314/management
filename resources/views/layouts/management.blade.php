@@ -110,6 +110,15 @@ to get the desired effect
                             <i class="nav-icon fas fa-th"></i>
                             <p>
                                 微服务管理
+                                <span class="right badge badge-danger">Hot</span>
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item has-treeview">
+                        <a href="{{route('crontab.index')}}/" class="nav-link {{ $active['crontab_active'] }}">
+                            <i class="nav-icon fas fa-th"></i>
+                            <p>
+                                Crontab
                                 <span class="right badge badge-danger">New</span>
                             </p>
                         </a>
@@ -136,7 +145,7 @@ to get the desired effect
 
     <!-- Main Footer -->
     <footer class="main-footer">
-        <strong>Copyright &copy; 2019-2019 <a href="http://www.jackdou.top">JackDou.top</a>.</strong>
+        <strong>Copyright &copy; 2019-2020 <a href="http://www.jackdou.top">JackDou.top</a>.</strong>
         All rights reserved.
         <div class="float-right d-none d-sm-inline-block">
             <b>Version</b> 1.0.0-beta.1

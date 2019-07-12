@@ -18,6 +18,7 @@ class ViewComposer
     protected $active = [
         'home_active' => '',
         'server_active' => '',
+        'crontab_active' => '',
     ];
 
     const ACTIVE = 'active';

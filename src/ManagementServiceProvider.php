@@ -55,6 +55,11 @@ class ManagementServiceProvider extends ServiceProvider
             'management::servers.client',
             'management::servers.supervisor',
         ], 'JackDou\Management\Http\ViewComposers\ServerComposer');
+        View::composer([
+            'management::crontab.index',
+            'management::crontab.create',
+            'management::crontab.edit',
+        ], 'JackDou\Management\Http\ViewComposers\CrontabComposer');
 
         //发布配置，公共asset
         $this->publishes([
