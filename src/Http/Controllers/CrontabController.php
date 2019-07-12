@@ -116,10 +116,13 @@ class CrontabController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        //
         $crontab = Crontab::findOrFail($id);
         $crontab->cron_node_status = Crontab::CRONTAB_DEL_STATUS;
         $crontab->save();
+        //不管有没有定时器都停止一下
+        Service::getInstance(SwooleService::CRON_MANAGER, $crontab->cron_node_ip)
+            ->call('CrontabService::stop', $crontab)
+            ->getResult(1);
         $request->session()->flash('success', '删除成功');
         return back();
     }
