@@ -16,3 +16,4 @@ management 是基于 ` jackdou/laravel-swoole`  和 `adminLTE3` 的 `laravel` �
 - 打开 youdomain.url/management 访问
 ## 新特性
 - v0.2.0 新增 `supervisor` 进程管理，后台一键启动，重启，停止
+- v0.2.2 新增 `crontab` 调度任务服务
