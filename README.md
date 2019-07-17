@@ -17,3 +17,4 @@ management 是基于 ` jackdou/laravel-swoole`  和 `adminLTE3` 的 `laravel` �
 ## 新特性
 - v0.2.0 新增 `supervisor` 进程管理，后台一键启动，重启，停止
 - v0.2.2 新增 `crontab` 调度任务服务 修复了多机器下发出错的问题，请使用最新版本
+- v0.2.3 新增 `crontab` 调度任务允许日志功能
