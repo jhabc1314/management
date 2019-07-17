@@ -62,7 +62,7 @@
                                 <td>{{ $crontab->modifier }}</td>
                                 <td>
                                     <form action="{{route('crontab.destroy', $crontab->id)}}" method="post"
-                                          class="form-inline">
+                                          class="form-inline" onsubmit="submit()">
                                         {{method_field('DELETE')}}
                                         {{csrf_field()}}
                                         <a href="{{route('crontab.edit', [$crontab->id])}}">
@@ -79,6 +79,10 @@
                                         @endif
                                         &nbsp;
                                         <button type="submit" class="btn btn-outline-danger">删除</button>
+                                        &nbsp;
+                                        <a href="{{route('crontab.log', $crontab->id)}}">
+                                            <button type="button" class="btn btn-outline-info">日志</button>
+                                        </a>
                                     </form>
 
                                 </td>
@@ -160,6 +164,12 @@
                 })
             }
         });
+        function submit()
+        {
+            let c = confirm('确定删除?');
+            console.log(c);
+            return c;
+        }
     </script>
 @endsection
 

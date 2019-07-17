@@ -35,5 +35,6 @@ Route::group(['prefix' => 'management', 'middleware' => 'web'], function() {
 
     Route::get('/crontab/{id}/start', $namePrefix . 'CrontabController@start')->name('crontab.start');
     Route::get('/crontab/{id}/stop', $namePrefix . 'CrontabController@stop')->name('crontab.stop');
+    Route::get('/crontab/{id}/log', $namePrefix . 'CrontabController@log')->name('crontab.log');
 
 });

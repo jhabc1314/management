@@ -59,6 +59,7 @@ class ManagementServiceProvider extends ServiceProvider
             'management::crontab.index',
             'management::crontab.create',
             'management::crontab.edit',
+            'management::crontab.log',
         ], 'JackDou\Management\Http\ViewComposers\CrontabComposer');
 
         //发布配置，公共asset

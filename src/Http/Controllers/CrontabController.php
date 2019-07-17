@@ -174,4 +174,21 @@ class CrontabController extends Controller
         }
         return back();
     }
+
+    public function log(Request $request, $id)
+    {
+        $crontab = Crontab::where('cron_node_status', '<', Crontab::CRONTAB_DEL_STATUS)->findOrFail($id);
+        $page = $request->get('page', 1);
+        $start = ($page - 1) * 50 + 1;
+        $end = $start + 50;
+        $log = Service::getInstance(SwooleService::NODE_MANAGER, $crontab->cron_node_ip)
+            ->call('CrontabService::getLog', $id, $start, $end)
+            ->getResult(1);
+        if (isset($log['code']) && $log['code'] === 0) {
+            $log_lines = $log['data'];
+        } else {
+            $log_lines = [];
+        }
+        return view("management::crontab.log", compact('log_lines', 'page', 'id'));
+    }
 }
