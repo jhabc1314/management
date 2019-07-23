@@ -2,8 +2,10 @@
 
 namespace JackDou\Management;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use JackDou\Management\Models\Server;
 
 class ManagementServiceProvider extends ServiceProvider
 {
@@ -31,6 +33,8 @@ class ManagementServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->app->booted([$this, 'customSchedule']);
+
         //加载管理台路由
         $this->loadRoutesFrom(__DIR__ . "/../routes/management.php");
 
@@ -66,5 +70,22 @@ class ManagementServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../resources/assets' => public_path('vendor/management'),
         ], 'management_assets');
+    }
+
+
+    public function customSchedule()
+    {
+        $schedule = $this->app->make(Schedule::class);
+        $schedule->call(function() {
+            //获取所有开启了服务治理的服务
+            $servers = Server::where('server_status', 1)
+                ->where('auto_governance', 1)
+                ->get();
+
+            $servers->each(function ($server) {
+                /** @var $server Server */
+                $server->governance();
+            });
+        })->everyMinute();
     }
 }

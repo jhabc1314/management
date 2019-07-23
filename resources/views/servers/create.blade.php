@@ -46,6 +46,13 @@
                                     <input type="text" name="server_desc" class="form-control" id="server_desc"
                                            placeholder="Enter server desc">
                                 </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" name="auto_governance" class="custom-control-input"
+                                               id="auto_governance">
+                                        <label class="custom-control-label" for="auto_governance">开启服务治理</label>
+                                    </div>
+                                </div>
                                 <!-- textarea -->
                                 <div class="form-group">
                                     <label>节点配置

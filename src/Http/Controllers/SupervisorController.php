@@ -38,7 +38,8 @@ class SupervisorController extends Controller
             $nodes = json_decode($server->server_node);
             $server->nodeStatus($nodes);
         }
-        return view('management::servers.supervisor', compact( 'server', 'supervisor', 'nodes'));
+        $ip = '';
+        return view('management::servers.supervisor', compact( 'server', 'supervisor', 'nodes', 'ip'));
     }
 
     /**
@@ -144,7 +145,7 @@ class SupervisorController extends Controller
                 break;
             }
         }
-        //推送配置到客户端
+        //推送配置到客户端 TODO 改成事件方式
         if ($need_push) {
             $clients = Client::where('server_id', $id)
                 ->where('client_status', 1)
@@ -243,15 +244,35 @@ class SupervisorController extends Controller
     {
         $server = Server::where('server_status', 1)->findOrFail($id);
         $nodes = json_decode($server->server_node, true) ?: [];
+        $need_push = false;
         foreach ($nodes as &$node) {
             if ($node['ip'] == $ip && $node['status'] == 'offline') {
                 $node['status'] = 'online';
                 $server->server_node = json_encode($nodes);
                 $server->modifier = Auth::guard($this->guard)->user()->name;
                 $server->save();
+                $need_push = true;
                 break;
             }
         }
+
+        //推送配置到客户端 TODO 改成事件方式
+        if ($need_push) {
+            $clients = Client::where('server_id', $id)
+                ->where('client_status', 1)
+                ->get();
+            if ($server->server_name == SwooleService::NODE_MANAGER) {
+                //下发节点管理服务的配置时先下发到当前机器，防止找不到其他的机器节点ip
+                ManagementService::pushServerNode($server->server_name, $server->server_node);
+            }
+            foreach ($clients as $client) {
+                //请求对应客户机器的node_manager 下发配置内容
+                Service::getInstance(SwooleService::NODE_MANAGER, $client->client_ip)
+                    ->call('ManagementService::pushServerNode', $server->server_name, $server->server_node)
+                    ->getResult();
+            }
+        }
+
         $request->session()->flash('success', '上线成功');
         return redirect(route('supervisor.index', $id));
     }

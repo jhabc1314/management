@@ -49,6 +49,13 @@ return [
     /*
      * 关键服务列表
      */
-    'kernel_servers' => ['node_manager'],
+    'kernel_servers' => ['node_manager', 'cron_manager'],
+
+    /*
+     * 通知等级，配置了超级管理员以后
+     * 系统如果发生此等级及以上的报警通知则会发送消息给超管
+     * info < notice < warning < alert < error
+     */
+    'notice_level' => 'warning',
 
 ];

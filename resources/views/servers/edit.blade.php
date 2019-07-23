@@ -47,6 +47,13 @@
                                     <input type="text" name="server_desc" class="form-control" id="server_desc"
                                            placeholder="Enter server desc" value="{{ $server->server_desc }}">
                                 </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" name="auto_governance" class="custom-control-input"
+                                               id="auto_governance" {{ $server->auto_governance == 1 ? 'checked' : '' }}>
+                                        <label class="custom-control-label" for="auto_governance">开启服务治理</label>
+                                    </div>
+                                </div>
                                 <!-- textarea -->
                                 <div class="form-group">
                                     <label>节点配置
@@ -62,7 +69,7 @@
                             <!-- /.card-body -->
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">Submit</button>
-                                <span class="text-danger">注意：修改成功需要重新下发才能生效</span>
+                                <span class="text-danger">注意：节点配置修改后需重新下发</span>
                             </div>
                         </form>
                     </div>

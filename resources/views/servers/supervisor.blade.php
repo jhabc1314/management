@@ -73,12 +73,14 @@
                                                 </td>
                                                 <td>
                                                     @if($node->status == 'online')
-                                                        <button type="button" class="btn btn-outline-danger"
-                                                                data-toggle="modal" data-target="#modal-offline">下线
+                                                        <button type="button" class="btn btn-outline-danger offline"
+                                                                data-toggle="modal" data-ip="{{$node->ip}}"
+                                                                data-target="#modal-offline">下线
                                                         </button>
                                                     @else
-                                                        <button type="button" class="btn btn-outline-success"
-                                                                data-toggle="modal" data-target="#modal-online">上线
+                                                        <button type="button" class="btn btn-outline-success online"
+                                                                data-toggle="modal" data-ip="{{$node->ip}}"
+                                                                data-target="#modal-online">上线
                                                         </button>
                                                     @endif
                                                     @if (strpos($node->run_status, 'STOPPED') !== false)
@@ -87,10 +89,12 @@
                                                             </button>
                                                         </a>
                                                     @elseif (strpos($node->run_status, 'RUNNING') !== false)
-                                                        <button type="button" class="btn btn-outline-danger"
+                                                        <button type="button" class="btn btn-outline-danger restart"
+                                                                data-ip="{{$node->ip}}"
                                                                 data-toggle="modal" data-target="#modal-restart">重启
                                                         </button>
-                                                        <button type="button" class="btn btn-outline-danger"
+                                                        <button type="button" class="btn btn-outline-danger stop"
+                                                                data-ip="{{$node->ip}}"
                                                                 data-toggle="modal" data-target="#modal-stop">停止
                                                         </button>
                                                     @endif
@@ -211,7 +215,7 @@
                         </div>
                         <div class="modal-footer justify-content-between">
                             <button type="button" class="btn btn-outline-light" data-dismiss="modal">取 消</button>
-                            <a href="{{route('supervisor.offline', [$server->id, $node->ip])}}">
+                            <a id="modal-offline-a" href="#">
                                 <button type="button" class="btn btn-outline-light">确 定</button>
                             </a>
                         </div>
@@ -238,7 +242,7 @@
                         </div>
                         <div class="modal-footer justify-content-between">
                             <button type="button" class="btn btn-outline-light" data-dismiss="modal">取 消</button>
-                            <a href="{{route('supervisor.restart', [$server->id, $node->ip])}}">
+                            <a id="modal-restart-a" href="#">
                                 <button type="button" class="btn btn-outline-light">确 定</button>
                             </a>
                         </div>
@@ -262,7 +266,7 @@
                         </div>
                         <div class="modal-footer justify-content-between">
                             <button type="button" class="btn btn-outline-light" data-dismiss="modal">取 消</button>
-                            <a href="{{route('supervisor.stop', [$server->id, $node->ip])}}">
+                            <a id="modal-stop-a" href="#">
                                 <button type="button" class="btn btn-outline-light">确 定</button>
                             </a>
                         </div>
@@ -286,7 +290,7 @@
                         </div>
                         <div class="modal-footer justify-content-between">
                             <button type="button" class="btn btn-outline-light" data-dismiss="modal">取 消</button>
-                            <a href="{{route('supervisor.online', [$server->id, $node->ip])}}">
+                            <a id="modal-online-a" href="#">
                                 <button type="button" class="btn btn-outline-light">确 定</button>
                             </a>
                         </div>
@@ -338,6 +342,29 @@
                 })
             }
         });
+
+        $(".offline").click(function () {
+            let ip = $(this).data('ip');
+            let href = '{{ route('supervisor.offline', [$server->id, $ip]) }}/' + ip;
+            console.log(href);
+            $("#modal-offline-a").attr('href', href);
+        });
+        $(".restart").click(function () {
+            let ip = $(this).data('ip');
+            let href = '{{route('supervisor.restart', [$server->id, $ip])}}/' + ip;
+            $("#modal-restart-a").attr('href', href);
+        });
+        $(".stop").click(function () {
+            let ip = $(this).data('ip');
+            let href = "{{route('supervisor.stop', [$server->id, $ip])}}/" + ip;
+            $("#modal-stop-a").attr('href', href);
+        });
+        $(".online").click(function () {
+            let ip = $(this).data('ip');
+            let href = "{{route('supervisor.online', [$server->id, $ip])}}/" + ip;
+            $("#modal-online-a").attr('href', href);
+        })
+
 
     </script>
 @endsection

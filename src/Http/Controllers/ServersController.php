@@ -70,6 +70,7 @@ class ServersController extends Controller
         $server->server_name = $request->post('server_name');
         $server->server_desc = $request->post('server_desc');
         $server->server_node = $request->post('server_node');
+        $server->auto_governance = $request->post('auto_governance') == 'on' ? 1 : 0;
         $server->creator = Auth::guard($this->guard)->user()->name;
         $server->save();
         $request->session()->flash('success', '添加成功');
@@ -102,7 +103,7 @@ class ServersController extends Controller
         //
         $server = Server::findOrFail($id);
         $put = $request->all();
-        //server_name 发生变化就触发supervisor名称变更
+        //server_name 发生变化就触发supervisor名称变更 TODO 改成事件方式
         if ($server->server_name != $put['server_name']) {
             $supervisor = Supervisor::where('server_id', $id)->first();
             $nodes = json_decode($server->server_node);
@@ -118,6 +119,7 @@ class ServersController extends Controller
         $server->server_name = $put['server_name'];
         $server->server_desc = $put['server_desc'];
         $server->server_node = $put['server_node'];
+        $server->auto_governance = (isset($put['auto_governance']) && $put['auto_governance'] == 'on') ? 1 : 0;
         $server->modifier = Auth::guard($this->guard)->user()->name;
         $server->save();
         $request->session()->flash('success', '更新成功');
