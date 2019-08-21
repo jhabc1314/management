@@ -17,5 +17,6 @@ class CrontabComposer extends ViewComposer
     {
         $this->active['crontab_active'] = self::ACTIVE;
         $view->with('active', $this->active);
+        $view->with('notifies', $this->notifies());
     }
 }

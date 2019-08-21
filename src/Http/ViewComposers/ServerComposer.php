@@ -16,5 +16,7 @@ class ServerComposer extends ViewComposer
     {
         $this->active['server_active'] = self::ACTIVE;
         $view->with('active', $this->active);
+        $view->with('notifies', $this->notifies());
+
     }
 }

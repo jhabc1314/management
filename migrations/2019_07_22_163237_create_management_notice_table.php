@@ -21,6 +21,7 @@ class CreateManagementNoticeTable extends Migration
             $table->string('notice_text', 255)->default('')->comment('通知内容');
             $table->string('notice_url', 128)->default('')->comment('跳转地址');
             $table->tinyInteger('notice_status')->default(0)->comment('通知状态0未读1已读');
+            $table->index('notice_user', 'idx_user');
             $table->timestamps();
         });
     }

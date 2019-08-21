@@ -5,7 +5,9 @@ namespace JackDou\Management\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\View;
+use JackDou\Management\Events\SupervisorStatus;
 use JackDou\Management\Models\Client;
 use JackDou\Management\Models\Server;
 use JackDou\Management\Models\Supervisor;
@@ -145,21 +147,9 @@ class SupervisorController extends Controller
                 break;
             }
         }
-        //推送配置到客户端 TODO 改成事件方式
+        //推送配置到客户端
         if ($need_push) {
-            $clients = Client::where('server_id', $id)
-                ->where('client_status', 1)
-                ->get();
-            if ($server->server_name == SwooleService::NODE_MANAGER) {
-                //下发节点管理服务的配置时先下发到当前机器，防止找不到其他的机器节点ip
-                ManagementService::pushServerNode($server->server_name, $server->server_node);
-            }
-            foreach ($clients as $client) {
-                //请求对应客户机器的node_manager 下发配置内容
-                Service::getInstance(SwooleService::NODE_MANAGER, $client->client_ip)
-                    ->call('ManagementService::pushServerNode', $server->server_name, $server->server_node)
-                    ->getResult();
-            }
+            \event(new SupervisorStatus($server));
         }
         $request->session()->flash('success', 'offline success');
         return redirect(route('supervisor.index', $id));
@@ -256,21 +246,9 @@ class SupervisorController extends Controller
             }
         }
 
-        //推送配置到客户端 TODO 改成事件方式
+        //推送配置到客户端
         if ($need_push) {
-            $clients = Client::where('server_id', $id)
-                ->where('client_status', 1)
-                ->get();
-            if ($server->server_name == SwooleService::NODE_MANAGER) {
-                //下发节点管理服务的配置时先下发到当前机器，防止找不到其他的机器节点ip
-                ManagementService::pushServerNode($server->server_name, $server->server_node);
-            }
-            foreach ($clients as $client) {
-                //请求对应客户机器的node_manager 下发配置内容
-                Service::getInstance(SwooleService::NODE_MANAGER, $client->client_ip)
-                    ->call('ManagementService::pushServerNode', $server->server_name, $server->server_node)
-                    ->getResult();
-            }
+            \event(new SupervisorStatus($server));
         }
 
         $request->session()->flash('success', '上线成功');

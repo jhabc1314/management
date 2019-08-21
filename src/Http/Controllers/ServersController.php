@@ -2,6 +2,7 @@
 
 namespace JackDou\Management\Http\Controllers;
 
+use JackDou\Management\Events\SupervisorName;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -103,18 +104,9 @@ class ServersController extends Controller
         //
         $server = Server::findOrFail($id);
         $put = $request->all();
-        //server_name 发生变化就触发supervisor名称变更 TODO 改成事件方式
+        //server_name 发生变化就触发supervisor名称变更
         if ($server->server_name != $put['server_name']) {
-            $supervisor = Supervisor::where('server_id', $id)->first();
-            $nodes = json_decode($server->server_node);
-            if (!empty($nodes) && $supervisor) {
-                foreach ($nodes as $node) {
-                    //重新修改supervisor配置项目名
-                    Service::getInstance(SwooleService::NODE_MANAGER, $node->ip)
-                        ->call('ManagementService::pushSupervisorConf', $put['server_name'], $supervisor, $server->server_name)
-                        ->getResult();
-                }
-            }
+            event(new SupervisorName($server, $put['server_name']));
         }
         $server->server_name = $put['server_name'];
         $server->server_desc = $put['server_desc'];

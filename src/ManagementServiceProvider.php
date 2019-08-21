@@ -9,6 +9,7 @@ use JackDou\Management\Models\Server;
 
 class ManagementServiceProvider extends ServiceProvider
 {
+
     /**
      * Register services.
      *
@@ -24,6 +25,7 @@ class ManagementServiceProvider extends ServiceProvider
             __DIR__ . '/../configs/management.php',
             'management'
         );
+        $this->app->register(ManagementEventProvider::class);
     }
 
     /**
@@ -51,7 +53,7 @@ class ManagementServiceProvider extends ServiceProvider
 
 
         //注册视图合成器
-        View::composer('management::home', 'JackDou\Management\Http\ViewComposers\HomeComposer');
+        View::composer(['management::home', 'management::notify.index'], 'JackDou\Management\Http\ViewComposers\HomeComposer');
         View::composer([
             'management::servers.index',
             'management::servers.create',
