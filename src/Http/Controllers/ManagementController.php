@@ -19,14 +19,6 @@ class ManagementController extends Controller
 
     public function home()
     {
-        //发送通知消息
-        event(new \JackDou\Management\Events\Notify([
-            'notice_title' => '测试消息',
-            'notice_text' => '你说是不是傻逼',
-            'notice_level' => Notify::ERROR,
-            'notice_url' => route('servers.index')
-        ]));
-
         //获取当前登录用户信息
         return view("management::home");
     }
